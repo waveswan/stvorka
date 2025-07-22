@@ -201,9 +201,6 @@ Template.StvorkaBottomSheet.onRendered(function () {
                 // Вернуть фокус на первый guard
                 focusGuards[0].focus();
                 let $focusGuard = $(focusGuards[0]);
-                let c = parseInt($focusGuard.text()) || 0
-                $(focusGuards[0]).text(c + 1);
-
                 template.manager.handleKeyboard();
             }
         }, 20);
@@ -223,8 +220,6 @@ Template.StvorkaBottomSheet.onRendered(function () {
                     window.scrollBy(0, -1);
                 }
                 lastHeight = newHeight;
-
-                //$('#info_text').text('visualViewport')
 
             }, 20);
 
@@ -302,21 +297,10 @@ Template.StvorkaBottomSheet.events({
     },
     // Обработка для фикса на iOS
     'blur input, blur textarea, blur select'(event, instance) {
-
         if (!isIOS()) return;
-
-        $('#info_text').text('ios blur')
-
         Meteor.setTimeout(function () {
             instance.manager.forceReflow();
-
         }, 20);
-
-        Meteor.setTimeout(function () {
-            $('#info_text').text('-')
-
-        }, 1000);
-
     }
 
 });
