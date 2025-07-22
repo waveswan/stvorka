@@ -1,0 +1,113 @@
+
+.stvorka-sheet-overlay {
+    display: none;
+    position: absolute; /* Меняем с fixed на absolute относительно wrapper */
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1040; /* Нижний слой */
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: auto; /* Включаем события только для оверлея */
+}
+
+.stvorka-sheet-overlay.active {
+    opacity: 1;
+    display: block;
+    position: fixed;
+}
+
+/* Сам bottom sheet - должен быть НАД оверлеем */
+.stvorka-sheet {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    border-radius: 16px 16px 0 0;
+    z-index: 150; /* Верхний слой */
+    max-height: 90vh;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.3s ease;
+    padding: 16px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    pointer-events: auto; /* Включаем события для содержимого */
+    -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+    touch-action: pan-y; /* Отключаем стандартное поведение */
+}
+
+[data-stvorka-handle] {
+    -webkit-tap-highlight-color: transparent; /* Убираем подсветку */
+}
+
+.stvorka-sheet.active {
+    transform: translateY(0);
+}
+
+
+
+.stvorka-sheet-overlay.active {
+    opacity: 1;
+}
+
+/* Остальные стили остаются без изменений */
+.stvorka-sheet-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+}
+
+.stvorka-sheet-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.stvorka-sheet-body {
+    padding-bottom: 20px;
+}
+
+/* Ручка */
+.stvorka-sheet-handle {
+    width: 40px;
+    height: 4px;
+    background-color: #ccc;
+    border-radius: 2px;
+    margin: 8px auto;
+    cursor: grab;
+    position: relative;
+    z-index: 1;
+}
+
+/* Для лучшей видимости */
+.stvorka-sheet-handle[data-stvorka-handle] {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+
+/* iOS-specific fixes */
+@supports (-webkit-touch-callout: none) {
+    stvorka-sheet {
+        transform: translate3d(0, 100%, 0);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        padding-bottom: env(safe-area-inset-bottom);
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+    }
+
+    .stvorka-sheet input,
+    .stvorka-sheet select,
+    .stvorka-sheet textarea {
+        -webkit-transform: translateZ(0);
+        transform: translateZ(0);
+    }
+
+
+}

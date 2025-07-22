@@ -1,0 +1,15 @@
+<template name="StvorkaBottomSheet">
+  <div id="{{id}}" class="stvorka-sheet-wrapper" data-stvorka-drawer-wrapper>
+    <div class="stvorka-sheet-overlay {{#if isOpen}}active{{/if}}" data-stvorka-overlay></div>
+    <div class="stvorka-sheet {{#if isDragging}}dragging{{/if}} {{#if isOpen}}active{{/if}}"
+      data-stvorka-drawer
+      style="transform: {{transformStyle}}; {{heightStyle}}">
+      <div class="stvorka-sheet-handle" data-stvorka-handle></div>
+      <div class="stvorka-sheet-content">
+        {{> Template.contentBlock}}
+      </div>
+      <span tabindex="0" id="info_text"></span>
+      <span tabindex="0" class="stvorka-focus-guard" data-stvorka-focus-guard></span>
+    </div>
+  </div>
+</template>
