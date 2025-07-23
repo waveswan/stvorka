@@ -206,26 +206,6 @@ Template.StvorkaBottomSheet.onRendered(function () {
         }, 20);
     });
 
-    // Фиксим проблему призрачных элементов на iOS при закрытии клавиатуры
-    if (isIOS() && window.visualViewport) {
-        let lastHeight = window.visualViewport.height;
-        window.visualViewport.addEventListener('resize', () => {
-
-            Meteor.setTimeout(function () {
-                const newHeight = window.visualViewport.height;
-                // Keyboard just closed (viewport height increased)
-                if (newHeight > lastHeight) {
-                    // Force layout update
-                    window.scrollBy(0, 1);
-                    window.scrollBy(0, -1);
-                }
-                lastHeight = newHeight;
-
-            }, 20);
-
-        });
-    }
-
 });
 
 Template.StvorkaBottomSheet.onDestroyed(function () {
