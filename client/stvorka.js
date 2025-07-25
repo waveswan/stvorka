@@ -49,6 +49,10 @@ class StvorkaBottomSheetManager {
         this.hasBeenOpened = new ReactiveVar(false);
         this.positionFixed = usePositionFixed();
 
+        // Добавляем коллбэки
+        this.onOpenCallbacks = [];
+        this.onCloseCallbacks = [];
+
     }
 
     destroy() {
@@ -64,6 +68,14 @@ class StvorkaBottomSheetManager {
         }
     }
 
+    onOpen(callback) {
+        if (typeof callback === 'function') {
+            this.onOpenCallbacks.push(callback);
+        }
+        return this; // Для возможности чейнинга
+    }
+
+
     open() {
         this.isOpen.set(true);
         this.hasBeenOpened.set(true);
@@ -71,6 +83,8 @@ class StvorkaBottomSheetManager {
         preventScroll.enable();
         this.transform.set('translateY(0)');
         this.bringToFront();
+        // Вызываем коллбэки открытия
+        this.onOpenCallbacks.forEach(callback => callback());
     }
 
     // Пересчтваем z-индекс, чтобы этот BottomSheet был поверх остальных
@@ -81,11 +95,21 @@ class StvorkaBottomSheetManager {
         this.instance.$('.stvorka-sheet').css('z-index', this.zIndex);
     }
 
+    onClose(callback) {
+        if (typeof callback === 'function') {
+            this.onCloseCallbacks.push(callback);
+        }
+        return this; // Для возможности чейнинга
+    }
+
     close(callback) {
         this.isOpen.set(false);
         this.positionFixed.restorePositionSetting();
         preventScroll.disable();
         this.transform.set('translateY(100%)');
+
+        this.onCloseCallbacks.forEach(cb => cb());
+
         setTimeout(() => {
             this.transform.set('');
             if (callback) callback();
@@ -331,9 +355,29 @@ Template.StvorkaBottomSheet.closeGlobal = function () {
     }
 };
 
+// Добавляем методы для подписки на события
+/*
+Template.StvorkaBottomSheet.onOpen = function(id, callback) {
+    const instance = activeInstances.get(id);
+    if (instance) {
+        instance.onOpen(callback);
+    }
+};
+
+Template.StvorkaBottomSheet.onClose = function(id, callback) {
+    const instance = activeInstances.get(id);
+    if (instance) {
+        instance.onClose(callback);
+    }
+};
+*/
+
 if (typeof window.StvorkaBottomSheet === 'undefined') {
     window.StvorkaBottomSheet = {
         open: Template.StvorkaBottomSheet.openGlobal,
-        close: Template.StvorkaBottomSheet.closeGlobal
+        close: Template.StvorkaBottomSheet.closeGlobal,
+        get: Template.StvorkaBottomSheet.get,
+        onOpen: Template.StvorkaBottomSheet.onOpen,
+        onClose: Template.StvorkaBottomSheet.onClose
     };
 }

@@ -37,6 +37,32 @@ Template.StvorkaBottomSheet.closeGlobal();
 ```
 ## Расширенные возможности
 
+## Callback-функции
+
+Вы можете подписаться на события открытия и закрытия Bottom Sheet:
+
+```javascript
+const sheet = Template.StvorkaBottomSheet.get('mySheetId');
+
+// Подписка на события
+sheet.onOpen(() => {
+    console.log('Bottom Sheet opened!');
+}).onClose(() => {
+    console.log('Bottom Sheet closed!');
+});
+
+// Или по отдельности
+sheet.onOpen(() => {
+    console.log('Bottom Sheet opened!');
+});
+
+sheet.onClose(() => {
+    console.log('Bottom Sheet closed!');
+});
+
+// Открытие после подписки
+sheet.open();
+```
 ## Несколько экземпляров
 
 ```html
@@ -46,7 +72,7 @@ Template.StvorkaBottomSheet.closeGlobal();
 ```
 ```javascript
 const sheet = Template.StvorkaBottomSheet.get('notifications');
-sheet.manager.open();
+sheet.open();
 ```
 ### API методов
 
