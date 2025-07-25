@@ -35,6 +35,17 @@ Template.StvorkaBottomSheet.openGlobal();
 // Закрыть 
 Template.StvorkaBottomSheet.closeGlobal();
 ```
+### Несколько экземпляров
+
+```html
+{{#StvorkaBottomSheet id="notifications"}}
+  {{> notificationsPanel}}
+{{/StvorkaBottomSheet}}
+```
+```javascript
+const sheet = Template.StvorkaBottomSheet.get('notifications');
+sheet.open();
+```
 ## Расширенные возможности
 
 ## Callback-функции
@@ -63,17 +74,7 @@ sheet.onClose(() => {
 // Открытие после подписки
 sheet.open();
 ```
-## Несколько экземпляров
 
-```html
-{{#StvorkaBottomSheet id="notifications"}}
-  {{> notificationsPanel}}
-{{/StvorkaBottomSheet}}
-```
-```javascript
-const sheet = Template.StvorkaBottomSheet.get('notifications');
-sheet.open();
-```
 ### API методов
 
 | Метод	   |Описание|
@@ -94,7 +95,7 @@ sheet.open();
 ## Пример с формой
 
 ```html
-{{#StvorkaBottomSheet}}
+{{#StvorkaBottomSheet id="main"}}
   <form class="auth-form">
     <input type="text" placeholder="Email">
     <button type="submit">Войти</button>
@@ -102,11 +103,24 @@ sheet.open();
 {{/StvorkaBottomSheet}}
 ```
 ```javascript
+Template.template.onRendered(function () {
+    const template = Template.instance();
+    const sheet = Template.StvorkaBottomSheet.get('main');
+    sheet.onClose(() => {
+        console.log('Notifications sheet closed');
+    });
+    // Добавляем время для анимации
+    Meteor.setTimeout(function () {
+        sheet.open();
+    }, 50);
+});
+
 Template.template.events({
-  'submit .auth-form'(event) {
-    event.stopPropagation();
-    // Обработка формы
-  }
+    'submit .auth-form'(event) {
+        event.stopPropagation();
+        // Обработка формы
+        Template.StvorkaBottomSheet.get('main').close();
+    }
 });
 ```
 ## Лучшие практики
